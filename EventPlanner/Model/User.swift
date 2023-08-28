@@ -12,6 +12,8 @@ struct User: Identifiable, Hashable, Codable{
     let fullname : String
     let email : String
     let phoneNumber : String
+    let imageUrl : String
+    let fcmToken: String
     
     var initials: String{
         let formatter = PersonNameComponentsFormatter()
@@ -23,5 +25,5 @@ struct User: Identifiable, Hashable, Codable{
     }
 }
 extension User{
-    static var MOCK_USER = User(id: NSUUID().uuidString, fullname: "Kobe Braynt ", email: "test@gmail.com", phoneNumber: "05079908165")
+    static var MOCK_USER = User(id: NSUUID().uuidString, fullname: "Kobe Braynt ", email: "test@gmail.com", phoneNumber: "05079908165", imageUrl: "asdas", fcmToken: "")
 }

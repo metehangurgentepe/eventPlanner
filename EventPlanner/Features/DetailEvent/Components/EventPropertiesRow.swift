@@ -17,7 +17,7 @@ struct EventPropertiesRow: View {
                 .foregroundColor(.green)
                 .frame(width: 20)
                 .clipped()
-            Text(text)
+            Text(text.locale())
             Spacer()
         }
         .font(.subheadline)

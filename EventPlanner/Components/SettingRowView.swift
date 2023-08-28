@@ -17,9 +17,12 @@ struct SettingRowView: View {
         HStack(spacing:12){
             Image(systemName: imageName)
                 .imageScale(.small)
+            //.aspectRatio(contentMode: .fit)
                 .font(.title)
                 .foregroundColor(tintColor)
-            Text(title)
+            // .frame(width: geometry.size.width * 0.05)
+            
+            Text(title.locale())
                 .font(.subheadline)
                 .foregroundColor(.black)
         }

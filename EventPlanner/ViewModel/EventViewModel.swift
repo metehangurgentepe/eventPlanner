@@ -30,28 +30,23 @@ class EventViewModel : ObservableObject{
     @Published var success : Bool = false
     @Published var upcomingList = [Event]()
     @Published var beforeList = [Event]()
-
-    
-    
+    @Published var eventDetail : [Event] = []
     let db = Firestore.firestore()
     
     
     func createEvent(name:String,type:String,price:String,description:String,location:String,isPublic:Bool,date:Date,imageUrl:String,latitude:Double,longitude:Double,phoneNumber:String) async throws{
         do{
-            
             guard let uid = Auth.auth().currentUser?.uid else { return }
             
             guard let email = Auth.auth().currentUser?.email else { return }
             
-            
-            
             let eventID = UUID()
-            let event = Event(id:eventID.uuidString , eventName: name, description: description, eventStartTime: date.description, eventLeadUser: email, eventPhoto:imageUrl, eventType: type, users: [email], location: location, publicEvent: isPublic, price: Int(price) ?? 0, phoneNumber: phoneNumber,latitude: latitude,longitude: longitude)
+            let urlId = UUID()
+            let url = "evplanner://event_id=\(urlId)"
+            let event = Event(id:eventID.uuidString , eventName: name, description: description, eventStartTime: date.description, eventLeadUser: email, eventPhoto:imageUrl, eventType: type, users: [email], location: location, publicEvent: isPublic, price: Int(price) ?? 0, phoneNumber: phoneNumber,latitude: latitude,longitude: longitude, eventUrl: url, groupChatLink: "")
             let encodedEvent = try Firestore.Encoder().encode(event)
             
-            
-            
-            try await db.collection("Events").document().setData(encodedEvent) { error in
+            try await db.collection("Events").document(eventID.uuidString).setData(encodedEvent) { error in
                 if let error = error {
                     // Handle the error
                     print("Error setting data: \(error.localizedDescription)")
@@ -164,59 +159,29 @@ class EventViewModel : ObservableObject{
         }
     }
     
-    func getPublicData() {
-        
-        // Get a reference to the database
-        let db = Firestore.firestore()
-        
-        // Read the documents at a specific path
-        db.collection("Events").getDocuments { snapshot, error in
+    func getEventData(eventUrl: String, completion: @escaping (Event?) -> Void) {
+        db.collection("Events").whereField("eventUrl", isEqualTo: eventUrl).getDocuments { snapshot, error in
             if let error = error {
-                // Handle the error
-                print("Error fetching documents: \(error.localizedDescription)")
+                print("Error retrieving data: \(error.localizedDescription)")
+                completion(nil)
                 return
             }
-            // Check for errors
-            if error == nil {
-                // No errors
-                
-                if let snapshot = snapshot {
-                    // Get all the documents and create Events
-                    let events = snapshot.documents.compactMap { document -> Event? in
-                        if let data = document.data() as? [String:Any], let isPublic = data["publicEvent"] as? Bool,isPublic == true {
-                            guard let data = document.data() as? [String:Any],
-                                  let id = data["id"] as? String,
-                                  let eventName = data["eventName"] as? String,
-                                  let description = data["description"] as? String,
-                                  let eventStartTime = data["eventStartTime"] as? String,
-                                  let eventLeadUser = data["eventLeadUser"] as? String,
-                                  let eventPhoto = data["eventPhoto"] as? String,
-                                  let eventType = data["eventType"] as? String,
-                                  let users = data["users"] as? [String],
-                                  let location = data["location"] as? String,
-                                  let publicEvent = data["publicEvent"] as? Bool,
-                                  let price = data["price"] as? Int,
-                                  let phoneNumber = data["phoneNumber"] as? String else {
-                                // Invalid data, skip this document
-                                return nil
-                            }
-                            return Event(id: id, eventName: eventName, description: description, eventStartTime: eventStartTime, eventLeadUser: eventLeadUser, eventPhoto: eventPhoto, eventType: eventType, users: users, location: location, publicEvent: publicEvent, price:price, phoneNumber: phoneNumber, latitude: 1.23, longitude: 1.23)
-                        }
+
+            if let snapshot = snapshot {
+                let events = snapshot.documents.compactMap { document -> Event? in
+                    do {
+                        let event = try document.data(as: Event.self)
+                        return event
+                    } catch {
+                        print("Error decoding document: \(error.localizedDescription)")
                         return nil
-                        
-                    }
-                    
-                    // Update the list property in the main thread
-                    DispatchQueue.main.async {
-                        self.list = events
                     }
                 }
-            } else {
-                // Handle the error
+                
+                completion(events.first)
             }
         }
     }
-    
     
     func getUserEvents() {
         let db = Firestore.firestore()
@@ -313,32 +278,32 @@ class EventViewModel : ObservableObject{
     
     
     func saveImage(image:UIImage) async -> String{
-        let photoName = UUID().uuidString
-        let storage = Storage.storage()
-        let storageRef = storage.reference().child("\(photoName).jpeg")
-        
-        guard let resizedImage = image.jpegData(compressionQuality: 0.4) else{
-            return ""
-        }
-        let metadata = StorageMetadata()
-        metadata.contentType = "image/jpg"
-        
-        var imageUrlString = ""
-        
-        do{
-            let _ = try await storageRef.putDataAsync(resizedImage,metadata: metadata)
-            do{
-                let imageURL = try await storageRef.downloadURL()
-                imageUrlString = "\(imageURL)"
-            } catch {
-                
+            let photoName = UUID().uuidString
+            let storage = Storage.storage()
+            let storageRef = storage.reference().child("\(photoName).jpeg")
+            
+            guard let resizedImage = image.jpegData(compressionQuality: 0.25) else{
+                return ""
             }
-        }catch{
-            print("error upload photo ")
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpg"
+            
+            var imageUrlString = ""
+            
+            do{
+                let _ = try await storageRef.putDataAsync(resizedImage,metadata: metadata)
+                do{
+                    let imageURL = try await storageRef.downloadURL()
+                    imageUrlString = "\(imageURL)"
+                    print(imageUrlString)
+                } catch {
+                    
+                }
+            }catch{
+                print("error upload photo ")
+            }
+            return imageUrlString
         }
-        return imageUrlString
-    }
-    
     
     func fetchUser() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }

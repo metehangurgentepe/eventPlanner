@@ -1,0 +1,208 @@
+/* 
+  Localizable(tr).strings
+  EventPlanner
+
+  Created by Metehan Gürgentepe on 15.08.2023.
+  
+*/
+
+//Tab
+"tabHome" = "Ana Sayfa";
+"tabSaved" = "Kaydedilenler";
+"tabEvent" = "Etkinlik";
+"tabAccount" = "Hesap";
+
+//Add Event view page
+"addTitle" = "Etkinlik Ekle";
+"addName" = "Etkinlik Adı";
+"addType" = "Etkinlik Türü";
+"addPrice" = "Fiyat";
+"addNext" = "İleri";
+"addSelectImage" = "Etkinlik Resmi Seçin";
+"addDescription" = "Açıklama";
+"addLocation" = "Yer";
+"addSelect" = "Seç";
+"addTime" = "Etkinlik Zamanı";
+"addPublicEvent" = "Herkese Açık Etkinlik";
+"addCreateEvent" = "Etkinlik Oluştur";
+"addNotCreated" = "Oluşturulamadı";
+"addOK" = "Tamam";
+"addBarTitle" = "Etkinlikleriniz";
+"addLocationNotAdded" = "Etkinlik göndermek için konum ekleyin";
+"addErrorMessage" = "Could not be created event.";
+"addPhotoError" = "Fotoğraf seçmediniz. Lütfen fotoğraf seçiniz";
+"addTimeError" = "Bulunduğumuz tarihten önce bir tarih seçemezsin";
+"addPriceError" = "Fiyat alanı boş, lütfen giriniz";
+"addLocationError" = "Lokasyon ismini giriniz";
+"addSelectLocationError" = "Haritadan konum seçiniz";
+"addCreationError" = "Etkinlik oluşturulurken bir hata oldu. Tekrar deneyiniz";
+"addEventAddButton" = "Harita";
+
+//Distance
+"distanceTitle" = "Mesafeyi ayarla";
+"distanceSubtitle" = "Herkese açık etkinliklerin görünürlük mesafesini ayarla";
+
+
+//Map
+"mapTap" = "Haritaya konum eklemek için 2 sn basılı tutunuz.";
+
+
+//Login
+"loginTitle" = "Hoşgeldiniz";
+"loginEmail" = "E-posta";
+"loginPassword" = "Şifre";
+"loginButton" = "GİRİŞ YAP";
+"loginError" = "Giriş Hatası";
+"loginNext" = "Hesabınız yoksa, tıklayın";
+"loginOK" = "Tamam";
+"loginMust" = "Etkinliği görmeniz için giriş yapmanız gerekmektedir.";
+"loginErrorMessage" = "Kullanıcı adı veya şifre yanlış.";
+"loginReset" = "Şifreyi Sıfırla";
+
+//Register
+"registerTitle" = "Üye Ol";
+"registerName" = "Ad Soyad";
+"registerEmail" = "E-posta";
+"registerPhone" = "0(500) ...";
+"registerPassword" = "Şifre";
+"registerButton" = "ÜYE OL";
+"registerBack" = "Geri";
+"registerError" = "Bilgileri hatalı girdiniz tekrar deneyiniz.";
+
+//CreatedEvents
+"createdEdit" = "Düzenle";
+"createdUsers" = "Katılımcılar";
+"createdDelete" = "Sil";
+"createdNoEvent" = "Oluşturulan etkinlik bulunmuyor.";
+"createdSelect" = "Seç";
+"createdAddEvent" = "Etkinlik Ekle";
+"createdEventTitle" = "Oluşturulan Etkinlikler";
+
+
+// Reset Password
+"resetPassword" = "Şifreyi Sıfırla";
+"resetEmail" = "E-posta";
+"resetAlertTitleError" = "Hata";
+"resetAlertTitleSuccess" = "Gönderildi";
+"resetAlertMessageError" = "Bu kimliğe karşılık gelen bir kullanıcı kaydı bulunmuyor.";
+"resetAlertMessageSuccess" = "Şifre sıfırlama e-postası gönderildi. Lütfen e-postanızı kontrol edin.";
+
+
+
+//Profile
+"profileGeneral" = "Genel";
+"profileAccount" = "Hesap";
+"profileSignOut" = "Çıkış Yap";
+"profileLanguage" = "Dil";
+"profileCreate" = "Oluşturulan Etkinlikler";
+"profileVersion" = "Versiyon";
+"profileVersionNumber" = "1.0.0";
+"profileEnglish" = "İngilizce";
+"profileInvolved" = "Katılınan Etkinlikler";
+"profileTitle" = "Profil";
+
+
+// Add User
+"userErrorCreated" = "Oluşturulan etkinliği oluşturan yapıyı kaldıramazsınız.";
+"userErrorLeadUser" = "Lider kullanıcı değilseniz kullanıcıyı kaldıramazsınız.";
+"userError" = "Hata";
+"userTitle" = "Etkinlikteki Kullanıcılar";
+
+// Category
+"categoryConcert" = "Konser";
+"categoryParty" = "Partiler";
+"categoryDinner" = "Yemekler";
+"categoryBarbecue" = "Mangal";
+"categorySport" = "Sporlar";
+"categoryOther" = "Diğer";
+"categoryAll" = "Tümü";
+
+
+
+//Saved Event
+"savedTitle" = "Kaydedilen Etkinlikler";
+"savedCreate" = "Favori listenizi oluşturun";
+"savedSubtitle" = "Arama yaparken favori etkinliklerinizi görmek için kalp simgesine dokunun.";
+
+//Edit Profile
+"editNavigationTitle" = "Profili Düzenle";
+"editImage" = "Profil Resmi";
+"editPersonalInfo" = "Kişisel Bilgiler";
+"editNameField" = "Ad";
+"editPhoneField" = "Telefon Numarası";
+"editResetPassword" = "Şifrenizi Sıfırlayın";
+"editAlertOkButton" = "Tamam";
+"editSaveButton" = "Kaydet";
+"photoError" = "Fotoğraf yüklenemedi.";
+"editSuccessTitle" = "Başarılı";
+"editErrorTitle" = "Başlık";
+"editSuccessMessage" = "Değişiklikleriniz başarıyla kaydedildi.";
+"editErrorMessage" = "Değişiklikleriniz doğru bir şekilde kaydedilemedi.";
+"editSuccessResetPassword" = "Şifre sıfırlama e-postası gönderildi. Lütfen e-postanızı kontrol edin.";
+"editErrorResetPassword" = "Şifre gönderilemedi.";
+
+//Detail Event
+"detailHighlights" = "ÖNE ÇIKANLAR";
+"detailUsers" = "Kullanıcıları Görüntüle";
+"detailLocation" = "Yere Git";
+"detailReserve" = "İstek Gönder";
+"detailSended" = "Gönderildi";
+"detailPublic" = "Herkese Açık";
+"detailPrivate" = "Özel";
+"detailShare" = "Paylaş";
+"detailCall" = "Şimdi Ara";
+
+//Event
+"eventTitle" = "Etkinliklerim";
+"eventSelect" = "Etkinlik Türünü Seç";
+"eventCreate" = "Etkinlik Oluştur";
+"eventUpcoming" = "Yaklaşan Etkinlikler";
+"eventView" = "Görüntüle";
+"eventViewDetails" = "Detay";
+"eventRequest" = "İstekler";
+"eventNoRequest" = "İstek kutun boş. Etkinliklerini arkadaşlarınla paylaş.";
+"eventNoEvent" = "İleri tarihte bir etkinlik gözükmüyor. Etkinlik yarat 🙂";
+"eventNoEvent" = "İleri tarihte bir etkinlik bulunmuyor. Etkinlik ekleyin 🙂";
+
+
+//involved event
+"involvedNoEvent" = "Katıldığınız bir etkinlik bulunmamaktadır.";
+"errorLeaveEvent" = "Etkinlikten ayrılamıyor";
+"successLeaveEvent" = "Etkinlik başarıyla terk edildi";
+"errorTitleLeaveEvent" = "Hata";
+"successTitleLeaveEvent" = "Başarılı";
+"leaveEvent" = "Etkinlikten ayrıl";
+
+
+
+// Home
+"homePlanner" = "Planlayıcı";
+"homeSearch" = "Etkinlik ara";
+"homeNoEvent" = "Mesafenizi arttırıp daha fazla etkinlik görün";
+"homeButton" = "Mesafeyi Ayarla";
+"homeRefresh" = "Mesafeyi ayarladıktan sonra sayfayı yenileyin";
+
+
+
+// Edit Event
+"editEventName" = "İsim";
+"editEventDescription" = "Açıklama";
+"editEventPrice" = "Fiyat";
+"editEventType" = "Tür";
+"editChatLink" = "Grup Sohbet Linki";
+"editChat" = "Sohbet Linki";
+"editLocation" = "Konum";
+"editGoTo" = "Git";
+"editPublic" = "Herkese Açık";
+"editCancel" = "İptal";
+"editSave" = "Kaydet";
+"editEventTitle" = "Etkinliği Düzenle";
+"editEventPhotoError" = "Fotoğraf seçilemedi. Başka bir fotoğraf seçin.";
+"editEventError" = "Hata";
+"editEventOkButton" = "Tamam";
+"editGroupChatLinkWrong" = "Grup sohbet bağlantısı yanlış, lütfen başka bir bağlantı deneyin.";
+"editCannotUpdateEvent" = "Etkinlik güncellenemiyor.";
+"editSavePhotoError" = "Fotoğraf yüklenemedi";
+"editEventSaving" = "Lütfen bekleyiniz";
+"editIsLoading" = "Yükleniyor";
+
