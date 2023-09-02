@@ -17,6 +17,7 @@ struct AddEventView: View {
     @State var selectedIcon : String = IconItemString.Home.click.rawValue
     var isNavigatedToHomeView : Bool
     @Environment(\.presentationMode) var presentationMode
+    @StateObject var viewModel = AddEventViewModel()
 
     
     var body: some View {
@@ -25,7 +26,7 @@ struct AddEventView: View {
                 Text(LocaleKeys.addEvent.title.rawValue.locale())
                     .font(.largeTitle)
                 
-                BorderTextField(name: $eventName, width: UIScreen.main.bounds.width * 0.85, height: UIScreen.main.bounds.height * 0.07, placeHolder: LocaleKeys.addEvent.name.rawValue, iconName:  IconItemString.EventView.name.rawValue, keyboardType: .default)
+                BorderTextField(name: $viewModel.name, width: UIScreen.main.bounds.width * 0.85, height: UIScreen.main.bounds.height * 0.07, placeHolder: LocaleKeys.addEvent.name.rawValue, iconName:  IconItemString.EventView.name.rawValue, keyboardType: .default)
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -36,7 +37,7 @@ struct AddEventView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(Color.black, lineWidth: 1) // Add the border here
                         )
-                    TextField(LocaleKeys.addEvent.description.rawValue.locale(), text: $description, axis: .vertical)
+                    TextField(LocaleKeys.addEvent.description.rawValue.locale(), text: $viewModel.desc, axis: .vertical)
                         .font(.subheadline)
                         .foregroundColor(.black)
                         .frame(width: UIScreen.main.bounds.width * 0.73)
@@ -44,7 +45,7 @@ struct AddEventView: View {
                 
                 DropdownButton(selectedOption: $selectedOption, selectedIcon: selectedIcon)
                 
-                NavigationLink(destination: AddEvent2View(eventName: eventName, eventType: selectedOption, description: description, isNavigatedToHomeView: isNavigatedToHomeView), label: {
+                NavigationLink(destination: AddEvent2View(eventName: viewModel.name, eventType: viewModel.selectedOption, description: viewModel.desc, isNavigatedToHomeView: isNavigatedToHomeView), label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .foregroundColor(.black)
