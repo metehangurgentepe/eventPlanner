@@ -11,15 +11,87 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class RequestViewModel: ObservableObject{
-    @Published var requestList : [Request] = []
-    @Published var eventList : [Event] = []
+    @Published private (set) var requestList : [Request] = []
+    @Published private (set) var eventList : [EventDatabase] = []
+    @Published var errorMessage = ""
+    @Published var showAlert : Bool = false
     
-    init(){
-        self.getRequest()
-        self.getEventById(eventIdList: requestList)
+    func getAllRequest() async throws{
+        do{
+            self.requestList = try await RequestManager.shared.getAllRequest()
+        } catch{
+            showAlert = true
+            errorMessage = error.localizedDescription
+        }
+    }
+    func acceptRequest(request:Request) async throws{
+        do{
+            
+        try await RequestManager.shared.acceptRequest(request: request)
+        } catch{
+            showAlert = true
+            errorMessage = error.localizedDescription
+        }
     }
     
-    func getRequest(){
+    func rejectRequest(request:Request) async throws{
+        do {
+            try await RequestManager.shared.rejectRequest(request: request)
+        } catch{
+            showAlert = true
+            errorMessage = error.localizedDescription
+        }
+    }
+    func convertEvent(request:Request) async throws{
+       // self.eventList = RequestManager.shared.convertEvent(request: request)
+    }
+    func convertAllEvents(requestIdList:[String]) async throws{
+        do{
+            self.eventList = try await RequestManager.shared.convertAllEvent(eventIdList: requestIdList)
+        } catch {
+            self.showAlert = true
+            self.errorMessage = error.localizedDescription
+        }
+    }
+    
+    func convertToDate(dateStr:String) -> String{
+        let dateFormatter = DateFormatter()
+        
+        // Set the input format to match the given timestamp
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        if let date = dateFormatter.date(from: dateStr) {
+            // Set the desired output format
+            dateFormatter.dateFormat = "dd MMMM"
+            
+            // Format the Date object as "14 September"
+            let formattedDateStr = dateFormatter.string(from: date)
+            return formattedDateStr // Output: 14 September
+        } else {
+            return dateStr
+        }
+    }
+    
+    func convertToTime(timeStr:String) -> String{
+        let dateFormatter = DateFormatter()
+        
+        // Set the input format to match the given timestamp
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        
+        // Parse the timestamp string to a Date object
+        if let date = dateFormatter.date(from: timeStr) {
+            // Set the desired output format for time
+            dateFormatter.dateFormat = "HH:mm"
+            
+            // Format the Date object to get the time in 24-hour format
+            let formattedTimeStr = dateFormatter.string(from: date)
+            return formattedTimeStr // Output: 16:03
+        } else {
+            return timeStr
+        }
+    }
+    
+    
+    /*func getRequest(){
         let db = Firestore.firestore()
         guard let email = Auth.auth().currentUser?.email else { return }
         
@@ -76,41 +148,7 @@ class RequestViewModel: ObservableObject{
         }
     }
     
-    func convertToDate(dateStr:String) -> String{
-        let dateFormatter = DateFormatter()
-        
-        // Set the input format to match the given timestamp
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-        if let date = dateFormatter.date(from: dateStr) {
-            // Set the desired output format
-            dateFormatter.dateFormat = "dd MMMM"
-            
-            // Format the Date object as "14 September"
-            let formattedDateStr = dateFormatter.string(from: date)
-            return formattedDateStr // Output: 14 September
-        } else {
-            return dateStr
-        }
-    }
     
-    func convertToTime(timeStr:String) -> String{
-        let dateFormatter = DateFormatter()
-        
-        // Set the input format to match the given timestamp
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-        
-        // Parse the timestamp string to a Date object
-        if let date = dateFormatter.date(from: timeStr) {
-            // Set the desired output format for time
-            dateFormatter.dateFormat = "HH:mm"
-            
-            // Format the Date object to get the time in 24-hour format
-            let formattedTimeStr = dateFormatter.string(from: date)
-            return formattedTimeStr // Output: 16:03
-        } else {
-            return timeStr
-        }
-    }
     
     
     func acceptRequest(requestId:String,eventId:String,sender:String){
@@ -149,6 +187,8 @@ class RequestViewModel: ObservableObject{
                 print("Document successfully updated!")
             }
         }
-    }
+    } */
+    
+    
 
 }

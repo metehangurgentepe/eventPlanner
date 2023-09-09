@@ -43,15 +43,25 @@ struct AddUserEventView: View {
                 }.onDelete { indexSet in
                     for index in indexSet {
                         let user = viewModel.userList[index]
-                        viewModel.removeUser(email: user.email, eventId: eventId)
+                        Task{
+                            do{
+                                try await viewModel.removeUser(email: user.email, eventId: eventId)
+                            } catch{
+                                viewModel.showAlert = true
+                                viewModel.errorMessage = LocaleKeys.AddUser.errorLeadUser.rawValue
+                            }
+                        }
                     }
                 }
             }.onAppear{
-                viewModel.getUsers(eventId: eventId)
+                Task{
+                    try await viewModel.getUsers(eventId: eventId)
+                }
+               
             }.alert(isPresented: $viewModel.showAlert) {
                 Alert(
                     title: Text(LocaleKeys.AddUser.title.rawValue.locale()),
-                    message: Text(viewModel.errorMessage.locale()),
+                    message: Text(viewModel.errorMessage),
                     dismissButton: .default(Text(LocaleKeys.Login.okButton.rawValue.locale()))
                 )
             }
@@ -66,7 +76,7 @@ struct AddUserEventView_Previews: PreviewProvider {
 }
 
 struct UserView: View {
-    var user: User
+    var user: UserModel
     var body: some View {
         HStack{
             AsyncImage(url: URL(string: user.imageUrl)) { image in

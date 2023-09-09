@@ -19,18 +19,11 @@ final class RegisterViewModel: ObservableObject{
     @Published var isLoading: Bool = false
     @Published var isSignIn: Bool = false
     
-    func signUp() async{
+    func signUp() async throws{
         isLoading = true
-        do{
-            let user = try await service.signUp(fullname: fullname, email: email, password: password, phoneNumber: phoneNumber)
-            isLoading = false
-            isSignIn = true
-            service.currentUser = user
-        } catch{
-            isLoading = false
-            showAlert = true
-            isSignIn = false
-        }
+        let user = try await service.signUp(fullname: fullname, email: email, password: password, phoneNumber: phoneNumber)
+        isLoading = false
+        isSignIn = true
     }
    // func 
 }

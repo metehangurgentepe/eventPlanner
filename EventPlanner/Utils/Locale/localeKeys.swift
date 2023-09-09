@@ -94,6 +94,11 @@ struct LocaleKeys{
         case english = "profileEnglish"
         case involved = "profileInvolved"
         case title = "profileTitle"
+        case deleteAccount = "profileDelete"
+        case deleteMessage = "profileDeleteMessage"
+        case yesButton = "profileYes"
+        case noButton = "profileNo"
+        case loginMessage = "profileLogin"
     }
     enum Map: String{
         case tap = "mapTap"
@@ -158,6 +163,8 @@ struct LocaleKeys{
         case share = "detailShare"
         case call = "detailCall"
         case error = "detailErrorMessage"
+        case close = "detailDescClose"
+        case readMore = "detailDescReadMore"
     }
     enum Event: String{
         case title = "eventTitle"
@@ -176,6 +183,8 @@ struct LocaleKeys{
         case noEvent = "homeNoEvent"
         case button = "homeButton"
         case refresh = "homeRefresh"
+        case loginMessage = "homeLoginMessage"
+        case saveEventMessage = "homeSaveMessage"
     }
     enum EditEvent: String{
         case name = "editEventName"

@@ -43,7 +43,7 @@ struct AddMapView: UIViewRepresentable {
         locationManager.stopUpdate()
         
         if let annotation = annotationStore.annotation{
-            let region = MKCoordinateRegion(center: annotation.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: span)
+            let region = MKCoordinateRegion(center: annotation.coordinate , span: span)
             uiView.setRegion(region, animated: true)
         }
         

@@ -19,7 +19,7 @@ struct CustomButton: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .foregroundColor(buttonColor)
-                    .frame(width: UIScreen.main.bounds.width * 0.425,height: UIScreen.main.bounds.height * 0.07)
+                    .frame(width: UIScreen.main.bounds.width * 0.9,height: UIScreen.main.bounds.height * 0.07)
                 Text(text.locale())
                     .foregroundColor(textColor)
             }

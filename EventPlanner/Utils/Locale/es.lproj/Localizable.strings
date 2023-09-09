@@ -8,210 +8,214 @@
 
 
 //Tab
-
-"tabHome" = "Home";
-"tabSaved" = "Saved Events";
-"tabEvent" = "Event";
-"tabAccount" = "Account";
-
+"tabHome" = "Inicio";
+"tabSaved" = "Eventos Guardados";
+"tabEvent" = "Evento";
+"tabAccount" = "Cuenta";
 
 //Add Event view page
-"addTitle" = "Add Event";
-"addName" = "Event Name";
-"addType" = "Event Type";
-"addPrice" = "Price";
-"addNext" = "Next";
-"addSelectImage" = "Select Event Image";
-"addDescription" = "Description";
-"addLocation" = "Location";
-"addTime" = "Time";
-"addPublicEvent" = "Public Event";
-"addCreateEvent" = "Create Event";
-"addNotCreated" = "Could not created";
+"addTitle" = "Agregar Evento";
+"addName" = "Nombre del Evento";
+"addType" = "Tipo de Evento";
+"addPrice" = "Precio";
+"addNext" = "Siguiente";
+"addSelectImage" = "Seleccionar Imagen del Evento";
+"addDescription" = "Descripción";
+"addLocation" = "Ubicación";
+"addTime" = "Hora";
+"addPublicEvent" = "Evento Público";
+"addCreateEvent" = "Crear Evento";
+"addNotCreated" = "No se pudo crear";
 "addOK" = "OK";
-"addBarTitle" = "Your Events";
-"addLocationNotAdded" = "Add location for submit event";
-"addSelect" = "Select";
+"addBarTitle" = "Tus Eventos";
+"addLocationNotAdded" = "Agrega una ubicación para enviar el evento";
+"addSelect" = "Seleccionar";
 "addErrorTitle" = "Error";
-"addErrorMessage" = "Could not be created event.";
-"addPhotoError" = "You haven't selected a photo. Please select a photo.";
-"addTimeError" = "You cannot select a date earlier than the current date.";
-"addPriceError" = "Price field is empty. Please enter a price.";
-"addLocationError" = "Location field is empty. Please enter a location name";
-"addSelectLocationError" = "Please select a location on the map";
-"addCreationError" = "An error occurred while creating the event. Please try again.";
-"addEventAddButton" = "Map";
-
+"addErrorMessage" = "No se pudo crear el evento.";
+"addPhotoError" = "No has seleccionado una foto. Por favor, selecciona una foto.";
+"addTimeError" = "No puedes seleccionar una fecha anterior a la fecha actual.";
+"addPriceError" = "El campo de precio está vacío. Por favor, ingresa un precio.";
+"addLocationError" = "El campo de ubicación está vacío. Por favor, ingresa un nombre de ubicación.";
+"addSelectLocationError" = "Por favor, selecciona una ubicación en el mapa.";
+"addCreationError" = "Ocurrió un error al crear el evento. Por favor, inténtalo de nuevo.";
+"addEventAddButton" = "Mapa";
 
 //Distance
-"distanceTitle" = "Set Distance";
-"distanceSubtitle" = "Set distance for public events";
-
+"distanceTitle" = "Establecer Distancia";
+"distanceSubtitle" = "Establecer la distancia para eventos públicos";
 
 //Map
-"mapTap" = "Tap for 2 seconds to add an annotation.";
-
-
+"mapTap" = "Toca durante 2 segundos para agregar una anotación.";
 
 //Login
-"loginTitle" = "Welcome";
-"loginEmail" = "Email";
-"loginPassword" = "Password";
-"loginButton" = "SIGN IN";
-"loginError" = "Sign In Error";
-"loginNext" = "If you don't have account, click";
+"loginTitle" = "Bienvenido";
+"loginEmail" = "Correo Electrónico";
+"loginPassword" = "Contraseña";
+"loginButton" = "INICIAR SESIÓN";
+"loginError" = "Error de Inicio de Sesión";
+"loginNext" = "Si no tienes una cuenta, haz clic aquí";
 "loginOK" = "OK";
-"loginMust" = "You need to login to see this event.";
-"loginErrorMessage" = "The user name or password are incorrect. This is easily corrected by typing the correct user name and password.";
-"loginReset" = "Reset Password";
-
+"loginMust" = "Debes iniciar sesión para ver este evento.";
+"loginErrorMessage" = "El nombre de usuario o la contraseña son incorrectos. Esto se puede corregir fácilmente ingresando el nombre de usuario y la contraseña correctos.";
+"loginReset" = "Restablecer Contraseña";
 
 //Register
-"registerTitle" = "Sign Up";
-"registerName" = "Full Name";
-"registerEmail" = "Email";
+"registerTitle" = "Registrarse";
+"registerName" = "Nombre Completo";
+"registerEmail" = "Correo Electrónico";
 "registerPhone" = "0(500) ...";
-"registerPassword" = "Password";
-"registerButton" = "SIGN UP";
-"registerBack" = "Back";
-"registerError" = "Enter valid informations";
-
-
+"registerPassword" = "Contraseña";
+"registerButton" = "REGISTRARSE";
+"registerBack" = "Atrás";
+"registerError" = "Ingresa información válida";
 
 //CreatedEvent
-"createdEdit" = "Edit";
-"createdUsers" = "Users";
-"createdDelete" = "Delete";
-"createdNoEvent" = "There is no created events.";
-"createdSelect" = "Select";
-"createdAddEvent" = "Add Event";
-"createdEventTitle" = "Created Events";
+"createdEdit" = "Editar";
+"createdUsers" = "Usuarios";
+"createdDelete" = "Eliminar";
+"createdNoEvent" = "No hay eventos creados.";
+"createdSelect" = "Seleccionar";
+"createdAddEvent" = "Agregar Evento";
+"createdEventTitle" = "Eventos Creados";
 
 //Reset Password
-"resetPassword" = "Reset Password";
-"resetEmail" = "Email";
+"resetPassword" = "Restablecer Contraseña";
+"resetEmail" = "Correo Electrónico";
 "resetAlertTitleError" = "Error";
-"resetAlertTitleSuccess" = "Sended";
-"resetAlertMessageError" = "There is no user record corresponding to this identifier.";
-"resetAlertMessageSuccess" = "Password reset email sent. Please check your email.";
-
+"resetAlertTitleSuccess" = "Enviado";
+"resetAlertMessageError" = "No existe un registro de usuario correspondiente a esta identificación.";
+"resetAlertMessageSuccess" = "Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, verifica tu correo electrónico.";
 
 //Profile
 "profileGeneral" = "General";
-"profileAccount" = "Account";
-"profileSignOut" = "Sign Out";
-"profileLanguage" = "Language";
-"profileCreate" = "Created Events";
-"profileVersion" = "Version";
+"profileAccount" = "Cuenta";
+"profileSignOut" = "Cerrar Sesión";
+"profileLanguage" = "Idioma";
+"profileCreate" = "Eventos Creados";
+"profileVersion" = "Versión";
 "profileVersionNumber" = "1.0.0";
-"profileEnglish" = "English";
-"profileInvolved" = "Involved Events";
-"profileTitle" = "Profile";
+"profileEnglish" = "Inglés";
+"profileInvolved" = "Eventos en los que Participas";
+"profileTitle" = "Perfil";
+"profileDelete" = "Eliminar cuenta";
+"profileDeleteMessage" = "¿Estás seguro de que quieres eliminar tu cuenta?";
+"profileYes" = "Sí";
+"profileNo" = "No";
+"profileLogin" = "Debe iniciar sesión para ver la página";
+
+
+
+
+
 
 // Add User
-"userErrorCreated" = "You can't remove the constructor that created the event.";
-"userErrorLeadUser" = "You can't remove user, because you are not lead user.";
+"userErrorCreated" = "No puedes eliminar al creador del evento.";
+"userErrorLeadUser" = "No puedes eliminar al usuario, porque no eres el usuario líder.";
 "userError" = "Error";
-"userTitle" = "Users in event";
-
+"userTitle" = "Usuarios en el evento";
 
 //Involved event
-"involvedNoEvent" = "There is no event you have attended";
-"errorLeaveEvent" = "Cannot leave the event";
-"successLeaveEvent" = "Successfully left the event";
+"involvedNoEvent" = "No hay eventos a los que hayas asistido";
+"errorLeaveEvent" = "No se puede abandonar el evento";
+"successLeaveEvent" = "Has abandonado el evento con éxito";
 "errorTitleLeaveEvent" = "Error";
-"successTitleLeaveEvent" = "Success";
-"leaveEvent" = "Leave Event";
-
+"successTitleLeaveEvent" = "Éxito";
+"leaveEvent" = "Abandonar Evento";
 
 // Category
-"categoryConcert" = "Concert";
-"categoryParty" = "Parties";
-"categoryDinner" = "Dinners";
-"categoryBarbecue" = "Barbecue";
-"categorySport" = "Sports";
-"categoryOther" = "Other";
-"categoryAll" = "All";
+"categoryConcert" = "Concierto";
+"categoryParty" = "Fiestas";
+"categoryDinner" = "Cenas";
+"categoryBarbecue" = "Asado";
+"categorySport" = "Deportes";
+"categoryOther" = "Otros";
+"categoryAll" = "Todos";
 
 //home
 
-
 //Saved Event
-"savedTitle" = "Saved Events";
-"savedCreate" = "Create your favorite list";
-"savedSubtitle" = "To see your favorite events while searching, touch the heart icon.";
+"savedTitle" = "Eventos Guardados";
+"savedCreate" = "Crea tu lista de favoritos";
+"savedSubtitle" = "Para ver tus eventos favoritos mientras buscas, toca el ícono de corazón.";
 
 //Edit Profile
-"editNavigationTitle" = "Edit Profile";
-"editImage" = "Profile Image";
-"editPersonalInfo" = "Personal Informatıon";
-"editNameField" = "Name";
-"editPhoneField" = "Phone Number";
-"editResetPassword" = "Reset Your Password";
+"editNavigationTitle" = "Editar Perfil";
+"editImage" = "Imagen de Perfil";
+"editPersonalInfo" = "Información Personal";
+"editNameField" = "Nombre";
+"editPhoneField" = "Número de Teléfono";
+"editResetPassword" = "Restablecer Tu Contraseña";
 "editAlertOkButton" = "OK";
-"editSaveButton" = "Save";
-"photoError" = "Photo cannot uploaded";
-"editSuccessTitle" = "Success";
-"editErrorTitle" = "Title";
-"editSuccessMessage" = "Your changes saved correctly";
-"editErrorMessage" = " Your changes cannot saved correctly";
-"editSuccessResetPassword" = "Password reset email sent. Please check your email.";
-"editErrorResetPassword" = "Cannot send password";
-"editIsLoading" = "Please wait";
-
-
+"editSaveButton" = "Guardar";
+"photoError" = "No se puede cargar la foto";
+"editSuccessTitle" = "Éxito";
+"editErrorTitle" = "Título";
+"editSuccessMessage" = "Tus cambios se han guardado correctamente";
+"editErrorMessage" = "Tus cambios no se han guardado correctamente";
+"editSuccessResetPassword" = "Se ha enviado un correo electrónico para restablecer la contraseña. Por favor, verifica tu correo electrónico.";
+"editErrorResetPassword" = "No se puede enviar la contraseña";
+"editIsLoading" = "Por favor espera";
 
 //Detail Event
-"detailHighlights" = "HIGHLIGHTS";
-"detailUsers" = "See users";
-"detailLocation" = "Go to location";
-"detailReserve" = "Send Request";
-"detailSended" = "Sended";
-"detailPublic" = "Public";
-"detailPrivate" = "Private";
-"detailShare" = "Share";
-"detailCall" = "Call Now";
-"detailErrorMessage" = "An error occurred while loading the event";
+"detailHighlights" = "DESTACADOS";
+"detailUsers" = "Ver Usuarios";
+"detailLocation" = "Ir a la Ubicación";
+"detailReserve" = "Enviar Solicitud";
+"detailSended" = "Enviado";
+"detailPublic" = "Público";
+"detailPrivate" = "Privado";
+"detailShare" = "Compartir";
+"detailCall" = "Llamar Ahora";
+"detailErrorMessage" = "Ocurrió un error al cargar el evento";
+"detailDescClose" = "Cerrar";
+"detailDescReadMore"= "Leer Más";
 
 //Event
-"eventTitle" = "My Events";
-"eventSelect" = "Select";
-"eventCreate" = "Create Event";
-"eventUpcoming" = "Upcoming Events";
-"eventView" = "View";
-"eventViewDetails" = "View Details";
-"eventRequest" = "Requests";
-"eventNoRequest" = "There is no request for your events. Share with your friends.";
-"eventNoEvent" = "There is no upcoming events, you can add event. Enjoy 🙂";
-
+"eventTitle" = "Mis Eventos";
+"eventSelect" = "Seleccionar";
+"eventCreate" = "Crear Evento";
+"eventUpcoming" = "Eventos Próximos";
+"eventView" = "Ver";
+"eventViewDetails" = "Ver Detalles";
+"eventRequest" = "Solicitudes";
+"eventNoRequest" = "No hay solicitudes para tus eventos. Comparte con tus amigos.";
+"eventNoEvent" = "No hay eventos próximos, puedes agregar un evento. ¡Disfruta! 🙂";
 
 // Home
 "homePlanner" = "ventier";
-"homeSearch" = "Search for events";
-"homeNoEvent" = "Increase your distance and see more events";
-"homeButton" = "Set Distance";
-"homeRefresh" = "When set distance refresh page";
+"homeSearch" = "Buscar Eventos";
+"homeNoEvent" = "Aumenta tu distancia y verás más eventos";
+"homeButton" = "Establecer Distancia";
+"homeRefresh" = "Al establecer la distancia, actualiza la página";
+"homeLoginMessage" = "Debes iniciar sesión en la aplicación para crear un evento";
+"homeSaveMessage" = "Debes iniciar sesión en la aplicación para guardar un evento.";
+
+
+
+
+
+
 
 
 // Edit Event
-"editEventName" = "Name";
-"editEventDescription" = "Description";
-"editEventPrice" = "Price";
-"editEventType" = "Type";
-"editChatLink" = "Group Chat Link";
-"editChat" = "Chat Link";
-"editLocation" = "Location";
-"editGoTo" = "Go to";
-"editPublic" = "Public";
-"editCancel" = "Cancel";
-"editSave" = "Save";
-"editEventTitle" = "Edit Event";
-"editEventPhotoError" = "Photo can't be selected. Select another photo.";
+"editEventName" = "Nombre";
+"editEventDescription" = "Descripción";
+"editEventPrice" = "Precio";
+"editEventType" = "Tipo";
+"editChatLink" = "Enlace de Chat en Grupo";
+"editChat" = "Enlace de Chat";
+"editLocation" = "Ubicación";
+"editGoTo" = "Ir a";
+"editPublic" = "Público";
+"editCancel" = "Cancelar";
+"editSave" = "Guardar";
+"editEventTitle" = "Editar Evento";
+"editEventPhotoError" = "No se puede seleccionar la foto. Selecciona otra foto.";
 "editEventError" = "Error";
 "editEventOkButton" = "OK";
-"editGroupChatLinkWrong" = "The group chat link is incorrect, please try another link.";
-"editCannotUpdateEvent" = "Unable to update the event.";
-"editEventErrorMessage" = "Group chat link is wrong, try another link";
-"editSavePhotoError" = "Cannot upload image";
-"editEventSaving" = "Saving...";
-"editCancelButton" = "Cancel";
+"editGroupChatLinkWrong" = "El enlace del chat en grupo es incorrecto, por favor intenta otro enlace.";
+"editCannotUpdateEvent" = "No se puede actualizar el evento.";
+"editEventErrorMessage" = "El enlace del chat en grupo es incorrecto, intenta otro enlace.";
+"editSavePhotoError" = "No se puede cargar la imagen";
+"editEventSaving" = "Guardando...";
+"editCancelButton" = "Cancelar";

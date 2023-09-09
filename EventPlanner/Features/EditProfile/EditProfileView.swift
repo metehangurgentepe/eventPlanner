@@ -7,7 +7,7 @@
 
 import SwiftUI
 import PhotosUI
-import FirebaseStorage
+import FirebaseCore
 import CustomAlert
 
 struct EditProfileView: View {
@@ -19,13 +19,12 @@ struct EditProfileView: View {
     @State var data : Data?
     @State var selectedItem : [PhotosPickerItem] = []
     @State var imageUrl: String
-    @EnvironmentObject var authVM : AuthManager
     @State var isFirstTime: Bool = false
     @State private var isSaving = false
-    
-    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
+        NavigationView{
         VStack{
             if data == nil && imageUrl == ""{
                 PhotosPicker(selection: $selectedItem){
@@ -44,8 +43,6 @@ struct EditProfileView: View {
                     .frame(height: UIScreen.main.bounds.height * 0.2)
                 }.onChange(of: selectedItem) { newValue in
                     if let item = newValue.first {
-                        // Fotoğraf seçildi, işlemleri burada gerçekleştirin.
-                        
                         item.loadTransferable(type: Data.self) { result in
                             switch result {
                             case .success(let data):
@@ -55,6 +52,7 @@ struct EditProfileView: View {
                                 }
                             case .failure(let error):
                                 viewModel.showPhotoAlert = true
+                                print(error)
                             }
                         }
                     } else {
@@ -80,7 +78,7 @@ struct EditProfileView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .clipShape(Circle())
-                            .frame(width: UIScreen.main.bounds.width * 0.6,height:UIScreen.main.bounds.height * 0.25,alignment: .center)
+                            .frame(maxWidth: UIScreen.main.bounds.width * 0.5,minHeight:UIScreen.main.bounds.height * 0.35,maxHeight:UIScreen.main.bounds.height * 0.5)
                         
                     } placeholder: {
                         Color.gray
@@ -91,7 +89,6 @@ struct EditProfileView: View {
                 }
                 .onChange(of: selectedItem) { newValue in
                     guard let item = selectedItem.first else { return }
-                    
                     item.loadTransferable(type: Data.self) { result in
                         switch result{
                         case .success(let data):
@@ -100,6 +97,8 @@ struct EditProfileView: View {
                             }
                         case .failure(let error):
                             viewModel.showPhotoAlert = true
+                            print(error)
+                            
                         }
                     }
                 }
@@ -125,7 +124,6 @@ struct EditProfileView: View {
                 }
             }
             
-            
             VStack{
                 Form {
                     Section(header: Text(LocaleKeys.EditProfile.personalInfo.rawValue.locale())) {
@@ -134,7 +132,11 @@ struct EditProfileView: View {
                     }
                 }
                 Button {
-                    viewModel.resetPassword(email: email)
+                    do {
+                        try viewModel.resetPassword(email: email)
+                    } catch {
+                        
+                    }
                 } label: {
                     ZStack{
                         Rectangle()
@@ -142,6 +144,8 @@ struct EditProfileView: View {
                             .frame(width: UIScreen.main.bounds.width * 0.8,height: 50)
                             .cornerRadius(10)
                         Text(LocaleKeys.EditProfile.reset.rawValue.locale())
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
                         
                     }
                     
@@ -167,28 +171,44 @@ struct EditProfileView: View {
                 .navigationBarTitle(LocaleKeys.EditProfile.title.rawValue.locale())
                 .navigationBarItems(trailing: Button(action: {
                     Task{
-                        isSaving = true 
+                        isSaving = true
                         if data == nil{
-                            viewModel.saveChanges(fullname: name, email: email, phoneNumber: phoneNumber,imageUrl:imageUrl)
-                            isSaving = false
+                            do{
+                                try await viewModel.updateUser(fullname: name, email: email, phoneNumber: phoneNumber, imageUrl: imageUrl)
+                                isSaving = false
+                            } catch{
+                                
+                            }
                         } else{
                             if let image = UIImage(data: data!) {
-                                let imageUrl = await viewModel.saveImage(image: image)
-                                viewModel.saveChanges(fullname: name, email: email, phoneNumber: phoneNumber,imageUrl:imageUrl)
+                                let imageUrl = try await viewModel.saveImage(image: image)
+                                try await viewModel.updateUser(fullname: name, email: email, phoneNumber: phoneNumber,imageUrl:imageUrl)
                                 isSaving = false
                             }
                         }
                     }
                 }) {
                     Text(LocaleKeys.EditProfile.saveButton.rawValue.locale())
+                        .foregroundColor(.red)
+                })
+                .navigationBarItems(leading: Button(action: {
+                  
+                   presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.left.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(.red)
                 })
         }.onAppear{
             if !isFirstTime{
                 Task{
-                    await authVM.fetchUser()
+                   try await viewModel.fetchUser()
                 }
             }
         }
+        }.navigationBarBackButtonHidden()
+            .navigationViewStyle(StackNavigationViewStyle())
+
     }
 }
 

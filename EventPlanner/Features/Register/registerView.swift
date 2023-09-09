@@ -9,12 +9,15 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseCore
 import CustomAlert
+import FirebaseAnalytics
 
 struct registerView: View {
     @EnvironmentObject private var authManager: AuthManager
     @Environment(\.presentationMode) var presentationMode
     @State private var showAlert = false
     @StateObject var viewModel = RegisterViewModel()
+    @State private var isKeyboardVisible: Bool = false
+    @Binding var showSignIn: Bool
     
     var body: some View {
         VStack(spacing:30){
@@ -23,18 +26,24 @@ struct registerView: View {
                 .padding()
             
             RegisterFormView(fullname: $viewModel.fullname, email: $viewModel.email, phoneNumber: $viewModel.phoneNumber, password: $viewModel.password)
-            
-           /* NavigationLink(
-                destination: MainTabView(),
-                isActive: $viewModel.isSignIn,
-                label: {
-                    EmptyView()
-                }) */
-
+                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                        withAnimation {
+                            isKeyboardVisible = true
+                        }
+                    }
+            KeyboardHideView(isKeyboardVisible: $isKeyboardVisible)
             
             Button{
                 Task{
-                     await viewModel.signUp()
+                    do {
+                        try await viewModel.signUp()
+                        showSignIn = false
+                        AnalyticsManager.shared.logEvent(name: "LoginView_RegisterButtonClicked",params: ["name":viewModel.fullname])
+                    } catch {
+                        viewModel.isLoading = false
+                        viewModel.showAlert = true
+                    }
+                    
                 }
             } label: {
                 ButtonDesignView()
@@ -43,7 +52,7 @@ struct registerView: View {
             .opacity(formIsValid ? 1.0 : 0.5)
             .background(
                 NavigationLink(
-                     destination: MainTabView(),
+                    destination: MainTabView(showSignInView: $showSignIn),
                      isActive: $viewModel.isSignIn,
                      label: {
                          EmptyView()
@@ -70,6 +79,7 @@ struct registerView: View {
                 )
             }
         }
+        .analyticsScreen(name: "registerView")
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backButton)
     }
@@ -95,7 +105,7 @@ extension registerView : AuthenticationFormProtocol{
 
 struct registerView_Previews: PreviewProvider {
     static var previews: some View {
-        registerView()
+        registerView( showSignIn: .constant(false))
     }
 }
 
@@ -148,5 +158,34 @@ struct ButtonDesignView: View {
             Text(LocaleKeys.Register.button.rawValue.locale())
                 .foregroundColor(.white)
         }
+    }
+}
+
+struct KeyboardHideView: View {
+    @Binding var isKeyboardVisible : Bool
+    var body: some View {
+        HStack{
+            Spacer()
+            if isKeyboardVisible {
+                Button{
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    withAnimation {
+                        isKeyboardVisible = false
+                    }
+                }label: {
+                    ZStack{
+                        Circle()
+                            .fill(.gray.opacity(0.3))
+                            .frame(width: 50,height: 50)
+                        Image("keyboard")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(.black)
+                            .frame(height: 35)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal)
     }
 }

@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct SavedEvent: Hashable, Codable{
+    var email: String
+    var eventsId : [String]
+}

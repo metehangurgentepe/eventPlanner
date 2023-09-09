@@ -19,17 +19,10 @@ final class LoginViewModel: ObservableObject{
     @Published var isLoading: Bool = false
     @Published var isSignIn: Bool = false
 
-    func signIn() async{
+    func signIn() async throws{
         isLoading = true
-        do{
-            let user = try await service.signInVM(email: email, password: password)
+            let _ = try await AuthenticationManager.shared.signIn(email: email, password: password)
+        self.isSignIn = true
             isLoading = false
-            isSignIn = true
-            service.currentUser = user
-        } catch{
-            isLoading = false
-            showAlert = true
-            isSignIn = false
-        }
     }
 }

@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 class CreatedEventViewModel: ObservableObject{
     @Published var alertMessage = ""
-    @Published var createdEventList : [Event] = []
+    @Published var createdEventList : [EventDatabase] = []
     @Published var isLoading : Bool = true
     
     let db = Firestore.firestore()
@@ -28,9 +28,9 @@ class CreatedEventViewModel: ObservableObject{
             }
             
             if let snapshot = snapshot{
-                let events = snapshot.documents.compactMap { document -> Event? in
+                let events = snapshot.documents.compactMap { document -> EventDatabase? in
                     do{
-                        let event = try document.data(as: Event.self)
+                        let event = try document.data(as: EventDatabase.self)
                         return event
                     } catch{
                         self.alertMessage = "\(error.localizedDescription)"

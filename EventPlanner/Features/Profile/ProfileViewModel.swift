@@ -12,9 +12,10 @@ import SwiftUI
 
 @MainActor
 final class ProfileViewModel: ObservableObject{
-    @Published var currentUser : User?
+    @Published var currentUser : UserModel?
     @StateObject var service = AuthManager()
     @Published var isSignOut: Bool = false
+    @Published var isLoading : Bool = false
     
     init(){
         Task{
@@ -23,29 +24,27 @@ final class ProfileViewModel: ObservableObject{
         }
     }
     func signOut(){
-        service.signOut()
-    }
-    func fetchUser() async {
-        guard let email = Auth.auth().currentUser?.email else { return }
         do {
-            let documentRef = Firestore.firestore().collection("Users").document(email.lowercased())
-            let documentSnapshot = try await documentRef.getDocument()
-            print("fonksiyon içinde")
-            
-            if let documentData = documentSnapshot.data() {
-                if let currentUser = try? Firestore.Decoder().decode(User.self, from: documentData) {
-                    DispatchQueue.main.async{
-                        self.currentUser = currentUser
-                        print(currentUser.email)
-                    }
-                } else {
-                    print("Error decoding user data")
-                }
-            } else {
-                print("User document does not exist")
-            }
+            try AuthenticationManager.shared.signOut()
         } catch {
-            print("Error fetching user: \(error)")
+            
+        }
+    }
+    
+    func deleteAccount() {
+        guard let email = Auth.auth().currentUser?.email else {return}
+        Firestore.firestore().collection("Users").document(email.lowercased()).delete()
+        Auth.auth().currentUser?.delete()
+    }
+    
+    func fetchUser() async {
+        isLoading = true
+        do {
+            self.currentUser = try await AuthenticationManager.shared.fetchUser()
+            isLoading = false
+        } catch{
+            self.currentUser = nil
+            isLoading = false
         }
     }
 }

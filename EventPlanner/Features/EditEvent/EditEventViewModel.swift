@@ -17,7 +17,7 @@ protocol EditEventFormProtocol{
 
 class EditEventViewModel: ObservableObject{
     @Published var errorMessage = ""
-    @Published var event : Event?
+    @Published var event : EventDatabase?
     @Published var showAlert : Bool = false
     @Published var isErrorAlertPresented : Bool = false
     @Published var errorAlert = Alert(title: Text(LocaleKeys.EditEvent.photoError.rawValue.locale()))
@@ -50,8 +50,7 @@ class EditEventViewModel: ObservableObject{
             }
             if let snapshot = snapshot{
                 do{
-                    let event = try snapshot.data(as: Event.self)
-                    print("buraya giriyor mu acaba kii")
+                    let event = try snapshot.data(as: EventDatabase.self)
                     self.event = event
                     self.name = event.eventName
                     self.desc = event.description
@@ -59,10 +58,10 @@ class EditEventViewModel: ObservableObject{
                     self.isPublic = event.publicEvent
                     self.groupChatLink = event.groupChatLink
                     self.isLoading = false
-                    self.location = event.location
+                    self.location = event.locationName
                     self.selectedOption = event.eventType
-                    self.latitude = event.latitude
-                    self.longitude = event.longitude
+                    self.latitude = event.location.latitude
+                    self.longitude = event.location.longitude
                 } catch{
                     self.errorMessage = "\(error.localizedDescription)"
                     self.showAlert = true
@@ -77,12 +76,16 @@ class EditEventViewModel: ObservableObject{
             self.showAlert = true
             self.errorMessage = LocaleKeys.EditEvent.errorMessage.rawValue
         case (_, _, nil):
-            let data = ["eventName": name, "description": desc, "publicEvent": isPublic, "price": price, "eventType": type, "groupChatLink": chatLink, "location": location, "latitude": latitude, "longitude": longitude] as [String : Any]
+            let data = ["eventName": name, "description": desc, "publicEvent": isPublic, "price": price, "eventType": type, "groupChatLink": chatLink, "location": GeoPoint(latitude: latitude, longitude: longitude), "locationName": location] as [String : Any]
             do {
-                try await db.collection("Events").document(eventId).updateData(data)
+                if isPublic{
+                    try await db.collection("Events").document(eventId).updateData(data)
+                    try await db.collection("publicEvents").document(eventId).updateData(data)
+                } else{
+                    try await db.collection("Events").document(eventId).updateData(data)
+                    try await db.collection("privateEvents").document(eventId).updateData(data)
+                }
                 self.success = true
-                print("ilk if ")
-                print(success)
             } catch {
                 self.showAlert = true
                 self.errorMessage = LocaleKeys.EditEvent.cannotUpdate.rawValue
@@ -91,11 +94,15 @@ class EditEventViewModel: ObservableObject{
             do {
                 let imageURL = await saveImage(image: image!)
                 
-                let data = ["eventName": name, "description": desc, "publicEvent": isPublic, "price": price, "eventType": type, "groupChatLink": chatLink, "location": location, "latitude": latitude, "eventPhoto": imageURL, "longitude": longitude] as [String : Any]
-                try await db.collection("Events").document(eventId).updateData(data)
+                let data = ["eventName": name, "description": desc, "publicEvent": isPublic, "price": price, "eventType": type, "groupChatLink": chatLink, "locationName": location, "location": GeoPoint(latitude: latitude, longitude: longitude), "eventPhoto": imageURL] as [String : Any]
+                if isPublic{
+                    try await db.collection("Events").document(eventId).updateData(data)
+                    try await db.collection("publicEvents").document(eventId).updateData(data)
+                } else{
+                    try await db.collection("Events").document(eventId).updateData(data)
+                    try await db.collection("privateEvents").document(eventId).updateData(data)
+                }
                 self.success = true
-                print("ikinci if ")
-                print(success)
             } catch {
                 self.showAlert = true
                 self.errorMessage = LocaleKeys.EditEvent.cannotUpdate.rawValue
@@ -105,7 +112,6 @@ class EditEventViewModel: ObservableObject{
    
     
     func isLink(chat: String) -> Bool {
-        print("here")
         // Metni bağlantıları kontrol etmek için bir regex deseni kullanabilirsiniz.
         let linkPattern = "http(s)?://([-\\w]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?"
         

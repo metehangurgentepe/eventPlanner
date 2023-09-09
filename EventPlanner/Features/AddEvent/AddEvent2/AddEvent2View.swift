@@ -17,32 +17,18 @@ struct AddEvent2View: View {
     var eventName: String
     var eventType: String
     var description: String
-    @State var selectedItem : [PhotosPickerItem] = []
-    @State var data : Data?
-    @State private var location = ""
-    @State private var isToggled = false
-    @State private var imageUrl = ""
-    @State private var eventTime = Date()
-    @ObservedObject private var eventVM = EventViewModel.shared
-    let storageRef = Storage.storage().reference()
-    @State private var selectedImage: UIImage?
+   // var isNavigatedToHomeView : Bool
     @EnvironmentObject var annotationStore: AnnotationStore
-    @State private var showAlert = false // Add a state variable to control the alert
-    @EnvironmentObject var authVM : AuthManager
-    @State var success : Bool = false
-    @Environment(\.presentationMode) var presentationMode
-    @State var price = ""
-    @State var errorMessage = ""
     @State var intersitial : GADInterstitialAd?
-    var isNavigatedToHomeView : Bool
-    @State private var isSaving = false
+    @StateObject var viewModel = Add2EventViewModel()
+    @GestureState private var dragOffset = CGSize.zero
+    @Binding var path : NavigationPath
     
     var body: some View {
-        NavigationView{
             ScrollView{
                 VStack(spacing: UIScreen.main.bounds.height * 0.04){
                     // PHOTO PICKER
-                    if let data = data{
+                    if let data = viewModel.data{
                         if let selectedImage = UIImage(data: data){
                             Image(uiImage: selectedImage)
                                 .resizable()
@@ -51,8 +37,8 @@ struct AddEvent2View: View {
                                 .frame(width: UIScreen.main.bounds.width * 0.6,height:UIScreen.main.bounds.height * 0.25,alignment: .center)
                         }
                     }
-                    if data == nil{
-                        PhotosPicker(selection: $selectedItem){
+                    if viewModel.data == nil{
+                        PhotosPicker(selection: $viewModel.selectedItem){
                             VStack(spacing:15){
                                 Image(IconItemString.EventView.photo.rawValue)
                                     .resizable()
@@ -65,17 +51,17 @@ struct AddEvent2View: View {
                                     .foregroundColor(.red)
                                     .font(.subheadline)
                             }
-                        }.onChange(of: selectedItem) { newValue in
-                            guard let item = selectedItem.first else { return }
+                        }.onChange(of: viewModel.selectedItem) { newValue in
+                            guard let item = viewModel.selectedItem.first else { return }
                             item.loadTransferable(type: Data.self) { result in
                                 switch result{
                                 case .success(let data):
                                     if let data = data{
-                                        self.data = data
+                                        self.viewModel.data = data
                                     }
-                                case .failure(let error):
-                                    self.showAlert = true
-                                    errorMessage = LocaleKeys.EditEvent.photoError.rawValue
+                                case .failure(_):
+                                    self.viewModel.showAlert = true
+                                    viewModel.errorMessage = LocaleKeys.EditEvent.photoError.rawValue
                                 }
                             }
                         }
@@ -92,11 +78,11 @@ struct AddEvent2View: View {
                     // DESCRIPTION
                     
                     
-                    BorderTextField(name: $price, width: UIScreen.main.bounds.width * 0.88, height: UIScreen.main.bounds.height * 0.07, placeHolder: LocaleKeys.addEvent.price.rawValue, iconName: IconItemString.EventView.price.rawValue,keyboardType: .numberPad)
+                    BorderTextField(name: $viewModel.price, width: UIScreen.main.bounds.width * 0.88, height: UIScreen.main.bounds.height * 0.07, placeHolder: LocaleKeys.addEvent.price.rawValue, iconName: IconItemString.EventView.price.rawValue,keyboardType: .numberPad)
                     
                     
                     HStack(spacing: UIScreen.main.bounds.width * 0.02){
-                        GrayTextField(name: $location, width: UIScreen.main.bounds.width * 0.43, height: UIScreen.main.bounds.height * 0.07, fieldWidth: 0.4, placeHolder: LocaleKeys.addEvent.location.rawValue, keyboardType: .default)
+                        GrayTextField(name: $viewModel.location, width: UIScreen.main.bounds.width * 0.43, height: UIScreen.main.bounds.height * 0.07, fieldWidth: 0.4, placeHolder: LocaleKeys.addEvent.location.rawValue, keyboardType: .default)
                         //go to button
                         NavigationLink(destination: MapUIView(latitude: annotationStore.annotation?.coordinate.latitude ?? 0.0, longitude: annotationStore.annotation?.coordinate.longitude ?? 0.0)) {
                             ZStack {
@@ -113,78 +99,41 @@ struct AddEvent2View: View {
                     }
                     
                     // DATE PICKER
-                    DatePicker(LocaleKeys.addEvent.time.rawValue.locale(), selection: $eventTime)
+                    DatePicker(LocaleKeys.addEvent.time.rawValue.locale(), selection: $viewModel.eventTime)
                         .datePickerStyle(.compact)
                         .foregroundColor(.indigo)
                         .frame(width: UIScreen.main.bounds.width * 0.88)
                     
                     // SWITCH
                     Group{
-                        Toggle(LocaleKeys.addEvent.publicEvent.rawValue.locale(), isOn: $isToggled)
+                        Toggle(LocaleKeys.addEvent.publicEvent.rawValue.locale(), isOn: $viewModel.isPublic)
                             .foregroundColor(.indigo)
                             .frame(width: UIScreen.main.bounds.width * 0.88)
                         
-                        if isNavigatedToHomeView {
-                            NavigationLink(destination: HomeView(), isActive: $success) {
+                       /* if isNavigatedToHomeView {
+                            NavigationLink(destination: HomeView(), isActive: $viewModel.success) {
                                 EmptyView()
                             }.frame(width: 2,height: 2)
                         } else {
-                            NavigationLink(destination: MyEventsView(), isActive: $success) {
+                            NavigationLink(destination: MyEventsView(), isActive: $viewModel.success) {
                                 EmptyView()
                             }.frame(width: 2,height: 2)
-                        }
+                        } */
+                        
                     }
                     //BUTTON
                     Button {
                         Task {
-                            switch true {
-                            case data == nil:
-                                showAlert = true
-                                self.errorMessage = LocaleKeys.addEvent.photoError.rawValue
-                                
-                            case eventTime < Date():
-                                showAlert = true
-                                self.errorMessage = LocaleKeys.addEvent.timeError.rawValue
-                                
-                            case price.isEmpty:
-                                showAlert = true
-                                self.errorMessage = LocaleKeys.addEvent.priceError.rawValue
-                                
-                            case location.isEmpty:
-                                showAlert = true
-                                self.errorMessage = LocaleKeys.addEvent.locationError.rawValue
-                                
-                            case annotationStore.annotation == nil:
-                                showAlert = true
-                                self.errorMessage = LocaleKeys.addEvent.selectLocationError.rawValue
-                                
-                            default:
-                                do {
-                                    isSaving = true
-                                    let image = UIImage(data: data!)
-                                    let imageUrl = await eventVM.saveImage(image: image!)
-                                    try await eventVM.createEvent(
-                                        name: eventName,
-                                        type: eventType,
-                                        price: price,
-                                        description: description,
-                                        location: location,
-                                        isPublic: isToggled,
-                                        date: eventTime,
-                                        imageUrl: imageUrl,
-                                        latitude: (annotationStore.annotation!.coordinate.latitude),
-                                        longitude: annotationStore.annotation!.coordinate.longitude,
-                                        phoneNumber: authVM.currentUser!.phoneNumber
-                                    )
-                                    removeAnnotation()
-                                    isSaving = false
-                                    self.success = true
-                                    /*  if  intersitial != nil {
-                                     intersitial!.present(fromRootViewController: (UIApplication.shared.windows.first?.rootViewController)!)
-                                     } */
-                                } catch {
-                                    self.errorMessage = LocaleKeys.addEvent.creationError.rawValue
+                            if let annotation = annotationStore.annotation{
+                                try await viewModel.createEvent(name:eventName,type:eventType,desc:description,annotation:annotation)
+                                AnalyticsManager.shared.logEvent(name: "AddEventView_CreateButtonClicked")
+                                removeAnnotation()
+                                if viewModel.success{
+                                    path = NavigationPath()
                                 }
+                            } else {
+                                viewModel.showAlert = true
+                                viewModel.errorMessage = LocaleKeys.addEvent.selectLocationError.rawValue
                             }
                         }
                     }label: {
@@ -199,16 +148,16 @@ struct AddEvent2View: View {
                                 .stroke()
                         )
                     }
-                    .alert(isPresented: $showAlert, content: {
+                    .alert(isPresented: $viewModel.showAlert, content: {
                         Alert(
                             title: Text(LocaleKeys.addEvent.errorTitle.rawValue.locale()),
-                            message: Text(self.errorMessage.locale()),
+                            message: Text(self.viewModel.errorMessage.locale()),
                             dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())) {
-                                showAlert = false
+                                viewModel.showAlert = false
                             }
                         )
                     })
-                    .customAlert(isPresented: $isSaving ) {
+                    .customAlert(isPresented: $viewModel.isSaving ) {
                         VStack(spacing: 16) {
                             ProgressView()
                                 .progressViewStyle(.circular)
@@ -219,14 +168,22 @@ struct AddEvent2View: View {
                     } actions: {}
                         .foregroundColor(.white)
                 }
-            }.navigationBarItems(leading: Button(action: {
+                .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                    if(value.startLocation.x < 60 &&
+                       value.translation.width > 100) {
+                        removeAnnotation()
+                        path.removeLast()
+                    }
+                }))
+            }
+            .navigationBarItems(leading: Button(action: {
                 removeAnnotation()
-                presentationMode.wrappedValue.dismiss()
+                path.removeLast()
             }) {
                 Image(systemName: "arrow.left.circle.fill")
                     .font(.title)
-            })
-        }.navigationBarBackButtonHidden()
+                    .foregroundColor(.red)
+            }).navigationBarBackButtonHidden()
     }
     func removeAnnotation() {
         annotationStore.annotation = nil
@@ -234,9 +191,9 @@ struct AddEvent2View: View {
 }
 
 
-extension AddEvent2View: EventFormProtocol {
+extension AddEvent2View: AddEvent2FormProtocol {
     var formIsValid: Bool {
-        return  !description.isEmpty && !location.isEmpty && isNumericString(price)
+        return !viewModel.location.isEmpty && isNumericString(viewModel.price)
     }
 }
 // price is numeric?
@@ -247,8 +204,8 @@ func isNumericString(_ string: String) -> Bool {
 }
 
 
-struct AddEvent2View_Previews: PreviewProvider {
+/*struct AddEvent2View_Previews: PreviewProvider {
     static var previews: some View {
-        AddEvent2View(eventName: "equip picnic", eventType: "picnic", description: "descr", isNavigatedToHomeView: true)
+        AddEvent2View(eventName: "equip picnic", eventType: "picnic", description: "descr", path: <#Binding<NavigationPath>#>)
     }
-}
+} */

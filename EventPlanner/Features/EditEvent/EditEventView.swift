@@ -86,7 +86,7 @@ struct EditEventView: View {
                                                 if let data = data{
                                                     self.data = data
                                                 }
-                                            case .failure(let error):
+                                            case .failure(_):
                                                 self.showAlert = true
                                             }
                                         }
@@ -124,6 +124,8 @@ struct EditEventView: View {
                                         .font(.subheadline)
                                         .foregroundColor(.black)
                                         .frame(width: UIScreen.main.bounds.width * 0.7)
+                                        .lineLimit(4) // Limit the number of lines to 4
+                                        .truncationMode(.tail) 
                                 }
                             }
                             .offset(x: 0, y: -UIScreen.main.bounds.height * 0.18)
@@ -149,6 +151,8 @@ struct EditEventView: View {
                             .padding(.leading)
                             
                             
+                            
+                            
                             // group chat link
                             VStack(spacing: 4){
                                 HStack {
@@ -159,7 +163,7 @@ struct EditEventView: View {
                                     
                             }
                             .frame(width: UIScreen.main.bounds.width * 0.9)
-                            
+                                
                             
                             // location
                             VStack(spacing: 4){
@@ -191,22 +195,12 @@ struct EditEventView: View {
                             }
                             .frame(width: UIScreen.main.bounds.width * 0.9)
                             
-                            // public or private event
-                            Toggle(LocaleKeys.EditEvent.publicStr.rawValue.locale(), isOn: $viewModel.isPublic)
-                                .frame(width: UIScreen.main.bounds.width * 0.9,height: UIScreen.main.bounds.height * 0.07)
-                                .toggleStyle(SwitchToggleStyle(tint: .red))
-                                
-                            
                             // buttons
                             HStack{
-                                CustomButton(textColor: .black, buttonColor: .white, text: LocaleKeys.EditEvent.cancel.rawValue, function: cancelButton)
-                                    .padding(.trailing)
                                 
                                 CustomButton(textColor: .white, buttonColor: .black, text: LocaleKeys.EditEvent.save.rawValue, function:{
                                     isSaving = true // Kaydetme işlemi başladığında loading pop-up'ı göster
                                     let lastAnnotation = annotationStore.annotation
-                                    print(lastAnnotation?.coordinate.latitude)
-                                    print("konum burada")
                                     Task {
                                         await viewModel.updateEvent(
                                             name: viewModel.name,
@@ -217,11 +211,12 @@ struct EditEventView: View {
                                             type: viewModel.selectedOption,
                                             chatLink: viewModel.groupChatLink,
                                             location: viewModel.location,
-                                            latitude: lastAnnotation?.coordinate.latitude ?? viewModel.event!.latitude,
-                                            longitude: lastAnnotation?.coordinate.longitude ?? viewModel.event!.longitude,
+                                            latitude: lastAnnotation?.coordinate.latitude ?? viewModel.event!.location.latitude,
+                                            longitude: lastAnnotation?.coordinate.longitude ?? viewModel.event!.location.longitude,
                                             image: data != nil ? UIImage(data: data!) : nil,
                                             eventId: viewModel.event!.id.description
                                         )
+                                        AnalyticsManager.shared.logEvent(name: "EditEventView_EditButtonClicked")
                                         if viewModel.success{
                                             isSaving = false // Kaydetme işlemi tamamlandığında loading pop-up'ı gizle
                                             removeAnnotation()
@@ -258,19 +253,21 @@ struct EditEventView: View {
                     }
                 }.navigationTitle(LocaleKeys.EditEvent.title.rawValue.locale())
             }
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
+
     }
     func removeAnnotation() {
         annotationStore.annotation = nil
     }
     func cancelButton(){
         removeAnnotation()
+        AnalyticsManager.shared.logEvent(name: "EditEventView_CancelButtonClicked")
         presentationMode.wrappedValue.dismiss()
     }
 }
 extension EditEventView: EditEventFormProtocol {
     var formIsValid: Bool {
-        return  !viewModel.desc.isEmpty && !viewModel.name.isEmpty && isNumericString(viewModel.price) && !viewModel.price.isEmpty && !viewModel.location.isEmpty
+        return  !viewModel.name.isEmpty && isNumericString(viewModel.price) && !viewModel.price.isEmpty && !viewModel.location.isEmpty
     }
 }
 

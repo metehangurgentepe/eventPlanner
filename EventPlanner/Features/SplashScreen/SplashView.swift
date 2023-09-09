@@ -8,56 +8,57 @@
 import SwiftUI
 
 struct SplashView: View {
-    @EnvironmentObject var authVM: AuthManager
-    @EnvironmentObject var eventVM : EventViewModel
-    @State private var selectedEvent: Event? = nil
+    @State private var selectedEvent: EventDatabase? = nil
     @State private var isActive = false
     @State private var size = 0.8
     @State private var opacity = 0.5
     @State private var offsetY: CGFloat = 1000 // Başlangıçta metni ekranın dışında başlatın
     @State private var navigateToDetail = false
     @State private var navigateToMustLogin = false
-    
+    @State var path = NavigationPath()
+    @State private var showSignInView : Bool = false
     
     var body: some View {
         if isActive{
-            if authVM.userSession != nil {
-                            MainTabView()
-                                .onOpenURL { url in
-                                    if url.absoluteString.contains("event_id") {
-                                        eventVM.getEventData(eventUrl: url.absoluteString) { event in
-                                            if let event = event {
-                                                selectedEvent = event
-                                                navigateToDetail = true
-                                            } else {
-                                                // Handle error if event data couldn't be fetched
-                                            }
-                                        }
-                                    }
+                VStack{
+                    //    if !showSignInView {
+                    MainTabView(showSignInView: $showSignInView)
+                        .onOpenURL { url in
+                            if url.absoluteString.contains("event_id") {
+                                Task{
+                                    selectedEvent = try await EventsManager.shared.getEventByUrl(url: url.absoluteString)
+                                    navigateToDetail = true
                                 }
-                                .background(
-                                    NavigationLink(
-                                        destination: DetailEventView(eventId: selectedEvent?.id ?? "" ), // Provide a default if selectedEvent is nil
-                                        isActive: $navigateToDetail,
-                                        label: { EmptyView() }
-                                    )
-                                )
-                        } else {
-                            LoginView()
-                                .onOpenURL { url in
-                                    if url.absoluteString.contains("event_id") {
-                                        eventVM.getEventData(eventUrl: url.absoluteString) { event in
-                                            if let event = event {
-                                                navigateToMustLogin = true
-                                            } else {
-                                                // Handle error if event data couldn't be fetched
-                                            }
-                                        }
-                                    }
-                                }.background(
-                                    NavigationLink(destination: MustLoginView(), isActive: $navigateToMustLogin, label: {EmptyView()})
-                                )
+                            }
                         }
+                        .background(
+                            NavigationLink(
+                                destination: DetailEventView(eventId: selectedEvent?.id ?? "", path: $path ),
+                                isActive: $navigateToDetail,
+                                label: { EmptyView() }
+                            )
+                        )
+                    //                } else {
+                    //                    LoginView(showSignInView: $showSignInView)
+                    //                        .onOpenURL { url in
+                    //                            if url.absoluteString.contains("event_id") {
+                    //                                Task{
+                    //                                    selectedEvent = try await EventsManager.shared.getEventByUrl(url: url.absoluteString)
+                    //                                    navigateToMustLogin = true
+                    //                                }
+                    //                            }
+                    //                        }.background(
+                    //                            NavigationLink(
+                    //                                destination: MustLoginView(),
+                    //                                isActive: $navigateToMustLogin,
+                    //                                label: {EmptyView()})
+                    //                        )
+                    //                }
+                }.onAppear{
+                    let currentUser = try? AuthenticationManager.shared.getAuthenticatedUser()
+                    self.showSignInView = currentUser == nil
+                }
+            
         } else{
             VStack{
                 VStack{

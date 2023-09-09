@@ -8,12 +8,14 @@
 import SwiftUI
 import MapKit
 import UIKit
+import FirebaseFirestore
 
 struct DetailMapView: UIViewRepresentable {
    // @EnvironmentObject var locationManager : LocationManager
   //  @State var annotations: AnnotationModel
     @StateObject var viewModel = MapViewModel()
     var annotations: AnnotationModel // Annotations'ı burada tanımlayın,
+   // var coordinate: GeoPoint
 
 
     

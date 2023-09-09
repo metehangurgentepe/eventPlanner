@@ -20,7 +20,7 @@ protocol EventFormProtocol{
 
 class EventViewModel : ObservableObject{
     static let shared = EventViewModel()
-    @Published var currentUser : User?
+    @Published var currentUser : UserModel?
     @Published var createEventError: Error?
     @Published var userSession : FirebaseAuth.User?
     @Published var detailEvent : Event?
@@ -36,8 +36,6 @@ class EventViewModel : ObservableObject{
     
     func createEvent(name:String,type:String,price:String,description:String,location:String,isPublic:Bool,date:Date,imageUrl:String,latitude:Double,longitude:Double,phoneNumber:String) async throws{
         do{
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            
             guard let email = Auth.auth().currentUser?.email else { return }
             
             let eventID = UUID()
@@ -46,7 +44,7 @@ class EventViewModel : ObservableObject{
             let event = Event(id:eventID.uuidString , eventName: name, description: description, eventStartTime: date.description, eventLeadUser: email, eventPhoto:imageUrl, eventType: type, users: [email], location: location, publicEvent: isPublic, price: Int(price) ?? 0, phoneNumber: phoneNumber,latitude: latitude,longitude: longitude, eventUrl: url, groupChatLink: "")
             let encodedEvent = try Firestore.Encoder().encode(event)
             
-            try await db.collection("Events").document(eventID.uuidString).setData(encodedEvent) { error in
+            try db.collection("Events").document(eventID.uuidString).setData(encodedEvent) { error in
                 if let error = error {
                     // Handle the error
                     print("Error setting data: \(error.localizedDescription)")
@@ -109,79 +107,8 @@ class EventViewModel : ObservableObject{
         }
     }
     
-    func form2IsValid(image:UIImage,nowDate:Date,annotation:AnnotationStore,desc:String,location:String,eventTime:Date) -> Alert{
-        if image == nil {
-            return Alert(title: Text("Error"), message: Text("Image is empty, select Image"), dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())))
-        } else if eventTime < nowDate{
-           return Alert(title: Text("Error"), message: Text("You can not select time before now"), dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())))
-        } else if annotation == nil {
-           return Alert(title: Text("Error"), message: Text("Select place in map"), dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())))
-        } else if desc == "" {
-           return Alert(title: Text("Error"), message: Text("Enter description"), dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())))
-        } else if location == "" {
-           return Alert(title: Text("Error"), message: Text("Location Name is empty"), dismissButton: .default(Text(LocaleKeys.addEvent.okButton.rawValue.locale())))
-        }
-        return Alert(title: Text("Success"))
-    }
     
-    func getEventDetail(eventId: String, completion: @escaping (Event?, Error?) -> Void) {
-        let db = Firestore.firestore()
-        let eventsCollection = db.collection("Events")
-        let eventDocument = eventsCollection.document(eventId)
-        
-        eventDocument.getDocument { (document, error) in
-            if let error = error {
-                // Handle error
-                completion(nil, error)
-                return
-            }
-            
-            guard let document = document, document.exists else {
-                // Event document does not exist
-                completion(nil, nil)
-                return
-            }
-            
-            // Parse event details from the document data
-            if let eventData = document.data() {
-                do {
-                    let decoder = Firestore.Decoder()
-                    let event = try decoder.decode(Event.self, from: eventData, in: eventDocument)
-                    completion(event, nil)
-                } catch {
-                    // Failed to parse event details
-                    completion(nil, error)
-                }
-            } else {
-                // Failed to retrieve event data
-                completion(nil, nil)
-            }
-        }
-    }
     
-    func getEventData(eventUrl: String, completion: @escaping (Event?) -> Void) {
-        db.collection("Events").whereField("eventUrl", isEqualTo: eventUrl).getDocuments { snapshot, error in
-            if let error = error {
-                print("Error retrieving data: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-
-            if let snapshot = snapshot {
-                let events = snapshot.documents.compactMap { document -> Event? in
-                    do {
-                        let event = try document.data(as: Event.self)
-                        return event
-                    } catch {
-                        print("Error decoding document: \(error.localizedDescription)")
-                        return nil
-                    }
-                }
-                
-                completion(events.first)
-            }
-        }
-    }
     
     func getUserEvents() {
         let db = Firestore.firestore()
@@ -312,7 +239,7 @@ class EventViewModel : ObservableObject{
             let documentSnapshot = try await documentRef.getDocument()
             
             if let documentData = documentSnapshot.data() {
-                if let currentUser = try? Firestore.Decoder().decode(User.self, from: documentData) {
+                if let currentUser = try? Firestore.Decoder().decode(UserModel.self, from: documentData) {
                     self.currentUser = currentUser
                 } else {
                     print("Error decoding user data")

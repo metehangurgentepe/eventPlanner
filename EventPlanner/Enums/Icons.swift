@@ -85,7 +85,7 @@ struct IconItemString{
     enum Home: String{
         case network = "network"
         case click = "arrow.down"
-        case plus = "plus"
+        case plus = "plus.circle.fill"
         case back = "arrow.left"
         case search = "magnifyingglass"
         case close = "xmark.circle.fill"

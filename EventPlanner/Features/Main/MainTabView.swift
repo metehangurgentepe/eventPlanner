@@ -8,15 +8,29 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject var eventVM = EventViewModel()
+    //@StateObject var eventVM = EventViewModel()
     @State var size = UIScreen.main.bounds.height * 0.1
     @State private var animate : Bool = false
     @State private var isNetworkReachable = true // Create a state variable
     @State private var isNetworkErrorPresented = false
-    let networkReachability = NetworkReachability()
+    @Binding var showSignInView: Bool
+    //@State private var showSignInView = true // or false, depending on your initial state
+    var tabItems: [HomeTabItem]
+
+    
+    init(showSignInView: Binding<Bool>) {
+           self._showSignInView = showSignInView
+           self.tabItems = [
+               HomeTabItem(page: AnyView(HomeView(showSignInView: showSignInView)), model: HomeTabModel(title: .home, icon: .home)),
+               HomeTabItem(page: AnyView(SavedEventView()), model: HomeTabModel(title: .saved, icon: .saved)),
+               HomeTabItem(page: AnyView(MyEventsView(showSignInView: showSignInView)), model: HomeTabModel(title: .event, icon: .event)),
+               HomeTabItem(page: AnyView(ProfileView(showSignInView: showSignInView)), model: HomeTabModel(title: .account, icon: .account))
+           ]
+       }
+    
     var body: some View {
         TabView{
-            ForEach(HomeTabItem.tabItems){ item in
+            ForEach(tabItems){ item in
                 item.page.tabItem {
                     TabIconLabel(model: item.model)
                         .animation(.spring(), value: animate)
@@ -24,24 +38,12 @@ struct MainTabView: View {
             }
         }
         .accentColor(.red)
-        .alert(isPresented: $isNetworkErrorPresented) {
-            Alert(
-                title: Text("Network Connection Error"),
-                message: Text("There is a problem with the network."),
-                dismissButton: .default(Text("Check Network Connection")){
-                    if !networkReachability.reachable {
-                        isNetworkErrorPresented = true
-                    }
-                }
-            )
-        }
-        
     }
 }
 
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
-        MainTabView()
+        MainTabView( showSignInView: .constant(false))
     }
 }
 

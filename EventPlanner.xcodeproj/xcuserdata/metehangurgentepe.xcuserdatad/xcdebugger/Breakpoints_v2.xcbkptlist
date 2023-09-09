@@ -3,4 +3,54 @@
    uuid = "7355067E-E7C3-4BB2-AE82-6966A42B6239"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "26765ADE-61F3-42D1-806B-6A6089B954A2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EventPlanner/Features/Home/HomePage/HomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "HomeView"
+            landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "26765ADE-61F3-42D1-806B-6A6089B954A2 - d2dcee64eddf7e58"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "EventPlanner.HomeView.init() -&gt; EventPlanner.HomeView"
+                  moduleName = "EventPlanner"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/metehangurgentepe/swiftProjects/EventPlanner/EventPlanner/Features/Home/HomePage/HomeView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "448">
+               </Location>
+               <Location
+                  uuid = "26765ADE-61F3-42D1-806B-6A6089B954A2 - 90776bcc6476dc90"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "EventPlanner.HomeView.init(isEmptyText: Swift.Bool, selectedTab: EventPlanner.CategoryModel) -&gt; EventPlanner.HomeView"
+                  moduleName = "EventPlanner"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/metehangurgentepe/swiftProjects/EventPlanner/EventPlanner/Features/Home/HomePage/HomeView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "252">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

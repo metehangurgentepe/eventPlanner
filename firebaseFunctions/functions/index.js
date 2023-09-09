@@ -80,7 +80,7 @@ exports.requestNotificationsToReceiver = functions.firestore.document("Request/{
 });
 
 
-exports.sendNotificationUpdateEvent = functions.firestore.document("Events/{id}").onUpdate(async (snapshot) => {
+exports.sendNotificationUpdateEvent = functions.firestore.document("privateEvents/{id}").onUpdate(async (snapshot) => {
   const users = snapshot.after.data().users;
   const messages = [];
 
@@ -118,6 +118,81 @@ exports.sendNotificationUpdateEvent = functions.firestore.document("Events/{id}"
     console.error('Error sending notification:', error);
     return res.status(500).send('Error sending notification');
   }
+});
+
+exports.updatePublicEvent = functions.firestore.document('publicEvents/{id}').onUpdate(async (change,context) => {
+    const newValue = change.after.data();
+    const previousValue = change.before.data();
+
+     // Örnek: publicEvents koleksiyonundaki bir belge güncellendiğinde events koleksiyonunu güncelle
+     if (newValue && previousValue) {
+      const eventId = context.params.id;
+      const updatedData = newValue;
+
+      // events koleksiyonunu güncelleme işlemini gerçekleştirin
+      const eventsCollection = admin.firestore().collection('Events');
+      await eventsCollection.doc(eventId).update(updatedData);
+  }
+
+  return null;
+});
+
+exports.updateWhenDeletedEvent = functions.firestore.document('Events/{id}').onDelete(async (snap, context) => {
+  const eventId = context.params.id;
+
+  // Silinen belgenin verilerini al
+  const eventData = snap.data();
+
+  // Silinen belgenin türüne göre hangi koleksiyondan silineceğini belirle
+  const collectionName = eventData.publicEvent ? 'publicEvents' : 'privateEvents';
+
+  // Koleksiyonu seç ve belgeyi sil
+  const eventsCollection = admin.firestore().collection(collectionName);
+  await eventsCollection.doc(eventId).delete();
+
+  return null;
+});
+
+exports.deletePublicEventsWhenExpired = functions.firestore.document('publicEvents/{id}').onWrite(async (snap, context) => {
+  const deletedEventData = snap.data(); // Silinen dokümanın verileri
+
+  // Silinen dokümanın oluşturulma tarihini al
+  const creationTimestamp = new Date(deletedEventData.eventStartTime); // Burada "timestamp" alanını kullanın veya belirlediğiniz alana göre ayarlayın
+ 
+
+  // Şu anın zaman damgasını al
+  const now = admin.firestore.Timestamp.now();
+
+  // Etkinliğin oluşturulmasından şu anki tarih arasındaki farkı hesapla
+  const timeDifference = now.toMillis() - creationTimestamp.toMillis();
+
+  // Eğer fark 10 günden fazlaysa, dokümanı sil
+  if (timeDifference > 10 * 24 * 60 * 60 * 1000) { // 10 günü milisaniye cinsinden hesapla
+    try {
+      await firestore.collection('publicEvents').doc(context.params.id).delete();
+      console.log(`Etkinlik (ID: ${context.params.id}) 10 günden fazla süredir silindi.`);
+    } catch (error) {
+      console.error('Etkinlik silme hatası:', error);
+    }
+  }
+});
+
+
+exports.updatePrivateEvent = functions.firestore.document('privateEvents/{id}').onUpdate(async (change,context) => {
+  const newValue = change.after.data();
+  const previousValue = change.before.data();
+
+   // Örnek: publicEvents koleksiyonundaki bir belge güncellendiğinde events koleksiyonunu güncelle
+   if (newValue && previousValue) {
+    const eventId = context.params.id;
+    const updatedData = newValue;
+
+    // events koleksiyonunu güncelleme işlemini gerçekleştirin
+    const eventsCollection = admin.firestore().collection('Events');
+    await eventsCollection.doc(eventId).update(updatedData);
+}
+
+return null;
 });
 
 exports.eventReminder = functions.firestore

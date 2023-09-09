@@ -40,8 +40,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Messaging.messaging().isAutoInitEnabled = true
 
 
-
-
     return true
   }
 }
@@ -76,13 +74,11 @@ struct EventPlannerApp: App {
     struct AppView: View {
         @EnvironmentObject var authVM : AuthManager
         @EnvironmentObject var eventVM : EventViewModel
-        @State private var navigateToDetail = false
-        @State private var navigateToMustLogin = false
-        @State private var selectedEvent: Event? = nil
         var body: some View {
             NavigationView{
                 SplashView()
-            }
+            }.navigationViewStyle(StackNavigationViewStyle())
+
         }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct AnnotationModel: Identifiable {
+struct AnnotationModel: Identifiable, Hashable {
     let id = UUID()
     let annotation: MKPointAnnotation
 }

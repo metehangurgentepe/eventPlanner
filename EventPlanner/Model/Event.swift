@@ -25,8 +25,5 @@ struct Event : Identifiable, Hashable, Codable{
     var longitude : Double
     var eventUrl: String
     var groupChatLink: String
-    
-    
 }
-
 
